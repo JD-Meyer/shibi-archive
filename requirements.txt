@@ -1,0 +1,19 @@
+# requirements.txt
+
+# Core LangChain library
+langchain
+
+# Community integrations for loaders and embeddings
+langchain-community
+
+# Vector Store
+chromadb
+
+# PDF Loading
+pypdf
+
+# Local Sentence Transformer models for embeddings
+sentence-transformers
+
+# Testing Framework
+pytest
