@@ -1,9 +1,16 @@
 # src/data_processing.py
 
 from typing import List
+import os
+# for loading and chunking the documents
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings  # Import the base class for type hinting
+
+# for creating the vector store
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
 
 
 def load_and_chunk_documents(source_directory: str) -> List[Document]:
@@ -59,3 +66,34 @@ def load_and_chunk_documents(source_directory: str) -> List[Document]:
     print(f"Split documents into {len(chunked_documents)} chunks.")
 
     return chunked_documents
+
+
+
+def create_vector_store(chunks: List[Document], embedding_model: Embeddings, persist_directory: str) -> Chroma:
+    """
+    Creates and persists a ChromaDB vector store from document chunks.
+
+    This function now accepts an embedding model as an argument instead of creating it internally.
+
+    Args:
+        chunks: A list of LangChain Document objects (our text chunks).
+        embedding_model: The embedding model instance to use for vectorization.
+        persist_directory: The directory path where the vector store will be saved.
+
+    Returns:
+        The created Chroma vector store instance.
+    """
+    # 2. Vector Storage Layer: Create and persist the Chroma vector store.
+    # The embedding model is now passed in directly.
+    print(f"Creating and persisting vector store at '{persist_directory}'...")
+    vector_store = Chroma.from_documents(
+        documents=chunks,
+        embedding=embedding_model,
+        persist_directory=persist_directory
+    )
+
+    # 3. Persist the database to disk. This is crucial.
+    vector_store.persist()
+
+    print("Vector store created successfully.")
+    return vector_store
