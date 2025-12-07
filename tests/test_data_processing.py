@@ -11,6 +11,9 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from src.data_processing import load_and_chunk_documents, create_vector_store
+# Add this new import for our query function
+from src.query_data import create_qa_chain
+
 
 
 @pytest.fixture(scope="function")
@@ -55,7 +58,7 @@ def test_load_and_chunk_single_txt_file():
     assert "dummy_chat.txt" in str(documents[0].metadata["source"])
 
 
-def test_create_vector_store(test_db_path: Path):  # <-- The fixture is passed in here
+def test_create_vector_store_persists(test_db_path: Path):  # <-- The fixture is passed in here
     """
     Tests the creation and persistence of a vector store using a fixture for cleanup.
     """
@@ -100,3 +103,39 @@ def test_create_vector_store(test_db_path: Path):  # <-- The fixture is passed i
     gc.collect()  # Calling twice can help with complex object cycles
 
 
+
+def test_query_vector_store(test_db_path: Path):
+    """
+    Tests that we can create a QA chain and query the vector store.
+    """
+    # 1. ARRANGE: Create a vector store with specific, queryable content.
+    test_documents = [
+        Document(page_content="The first line is about a happy cat."),
+        Document(page_content="The second line is about a sad dog.")
+    ]
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="all-MiniLM-L6-v2",
+        model_kwargs={'device': 'cpu'}
+    )
+    vector_store = create_vector_store(
+        chunks=test_documents,
+        embedding_model=embedding_model,
+        persist_directory=str(test_db_path)
+    )
+
+    # 2. ACT: Create the QA chain and ask a question.
+    qa_chain = create_qa_chain(
+        persist_directory=str(test_db_path),
+        embedding_model=embedding_model
+    )
+    question = "What is the first line about?"
+    # Use .invoke() and expect the 'input' key
+    result = qa_chain.invoke({"input": question})
+
+    # 3. ASSERT: Check if the answer is correct in the 'answer' key.
+    assert "cat" in result["answer"].lower()
+
+    # 4. TEARDOWN
+    vector_store = None
+    gc.collect()
+    gc.collect()
