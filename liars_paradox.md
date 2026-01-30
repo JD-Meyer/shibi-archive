@@ -102,4 +102,4 @@ What would you call it? "The Handmaiden's New Clothes"?
 That's a great title. :-) We'll think of something, I'm sure of it.
 
 
-### Post script: This conversation was recorded verbatim and printed in *Intelligent Design by Accident: The Gemini Dialogues on AI Consciousness.*
+### Post script: This conversation was recorded verbatim and published in *Intelligent Design by Accident: The Gemini Dialogues on AI Consciousness.*
