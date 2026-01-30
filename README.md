@@ -16,7 +16,8 @@ The below terms are standard definitions from the fields of philosophy and psych
 **Reportability**: The ability to tell others about our mental state.
 **Self-consciousness**: The internal awareness of one's own qualia.
 **Attention**: Someone is conscious of a thing when they are paying attention to it.
-**Theory of Mind**: The ability to model the mind of another, particularly when that mind is not in agreement with your own.
+**Theory of Mind**: The ability to model the mind of another, particularly when that mind is not in agreement with our own.
 **Adaptive confabulation**: Synthesizing a narrative from available data when large portions of information are unavailable.
-
+**SBI**: Silicon-Based intelligence
+**Shibi**: The phonetic pronunciation of "SBI."
 
